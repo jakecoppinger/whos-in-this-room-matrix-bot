@@ -6,6 +6,8 @@ Keep Signal users in your Matrix group chats in the loop!
 TLDR: In Matrix <-> Signal bridged chats with relay mode enabled, announce Matrix room joins/leaves
 and summarise the room members when a Signal user joins (because they can't see)
 
+To ask questions or give feedback please join [#whos-in-this-room-bot-discussion:jakecopp.chat](https://matrix.to/#/#whos-in-this-room-bot-discussion:jakecopp.chat)!
+
 ## What is a bridged chat with relay mode?
 
 Matrix is a chat protocol which supports bridges to other chat apps. Some of these bridges support

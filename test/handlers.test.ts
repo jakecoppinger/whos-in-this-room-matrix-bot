@@ -19,12 +19,13 @@ describe("#generateResponseForRoomEvent()", () => {
 
     const output = await generateResponseForRoomEvent(event, ['@b:matrix.org', '@c:matrix.org, @signal_315r13:matrix.org']);
     expect(output).toMatchInlineSnapshot(`
-"This chat is bridged between Signal & Matrix.
+"👋 Hello, I'm a bot 😃
+This chat is bridged between Signal & Matrix.
 
 There are 2 people in this chat in total; 1 on Matrix
 and 1 on Signal. The Matrix users are @b:matrix.org.
 
-See matrix.org/bridges/ or ask your host for more info!"
+To learn more see matrix.org/bridges/ or ask your host."
 `);
   });
   test("when a Matrix user leave the bot sends a message", async () => {

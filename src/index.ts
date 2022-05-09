@@ -43,7 +43,7 @@ async function main() {
 Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see).
       
 I'll also let them know when Matrix users join or leave.\n
-For questions or feedback jump into #somewhere:somewhere.org.`,
+For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat.`,
     });
   });
 

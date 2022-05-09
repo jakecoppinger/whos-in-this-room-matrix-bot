@@ -20,7 +20,7 @@ export async function createIntroductionString(members: string[]): Promise<strin
   return `👋 Hello, I'm a bot 😃\nThis chat is bridged between Signal & Matrix.\n
 There are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix
 and ${numSignalMembers} on Signal. The Matrix users are ${matrixNames}.\n
-See matrix.org/bridges/ to learn more about bridges or jump into  more info!`;
+To learn more see matrix.org/bridges/ or ask your host.`;
 }
 
 /** How many real people in the room? */
