@@ -22,8 +22,7 @@ describe("#generateResponseForRoomEvent()", () => {
 "👋 Hello, I'm a bot 😃
 This chat is bridged between Signal & Matrix.
 
-There are 2 people in this chat in total; 1 on Matrix
-and 1 on Signal. The Matrix users are @b:matrix.org.
+There are 2 people in this chat in total; 1 on Matrix and 1 on Signal. The Matrix users are @b:matrix.org.
 
 To learn more see matrix.org/bridges/ or ask your host."
 `);
