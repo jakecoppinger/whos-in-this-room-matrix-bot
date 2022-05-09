@@ -1,6 +1,8 @@
 Who's In This Room Matix Bot
 ============================
 
+![Screenshot of bot conversation](img/screenshot.png)
+
 Keep Signal users in your Matrix group chats in the loop!
 
 TLDR: In Matrix <-> Signal bridged chats with relay mode enabled, announce Matrix room joins/leaves
