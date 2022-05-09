@@ -5,7 +5,7 @@ export function isABot(userId: string): boolean {
   return userId.includes('bot')
 }
 
-export function generateUserCounts(members: string[]): string {
+export function generateUserCounts(members: string[], prefix: string = `There`): string {
   const signalMembers = members.filter(isASignalUser);
   const bots = members.filter(isABot);
 
@@ -18,9 +18,7 @@ export function generateUserCounts(members: string[]): string {
   const matrixNameList: string[] = members.filter(member => !isABot(member) && !isASignalUser(member));
   const matrixNames: string = matrixNameList.join(', ');
 
-  return `There are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix
-and ${numSignalMembers} on Signal. The Matrix users are ${matrixNames}.\n`
-
+  return `${prefix} are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers} on Signal. The Matrix users are ${matrixNames}.\n`
 }
 
 export function generateOverview(members: string[]): string {
