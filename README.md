@@ -1,4 +1,4 @@
-Who's In This Room Matix Bot
+Who's In This Room Matrix Bot
 ============================
 
 ![Screenshot of bot conversation](img/screenshot.png)
