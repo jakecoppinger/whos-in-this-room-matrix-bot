@@ -4,8 +4,8 @@ import {
   RichConsoleLogger,
 } from "matrix-bot-sdk";
 import { homeserverUrl, matrixBotPassword, matrixBotUsername } from './config'
-import { parseMatrixUsernamePretty } from './utils';
-import {handleRoomEvent} from './handlers';
+import { generateUserCounts, parseMatrixUsernamePretty } from './utils';
+import { handleRoomEvent } from './handlers';
 
 LogService.setLogger(new RichConsoleLogger());
 
@@ -34,20 +34,24 @@ async function main() {
     LogService.error("index", `Failed decryption event!\n${{ roomId, event, error }}`);
   });
 
-  client.on("room.join", (roomId: string, event: any) => {
+  client.on("room.join", async (roomId: string, event: any) => {
     console.log({ event });
     LogService.info("index", `Bot joined room ${roomId}`);
+
+    const members = await client.getJoinedRoomMembers(roomId);
     client.sendMessage(roomId, {
       "msgtype": "m.notice",
       "body": `👋 Hello, I'm the Who's In This Room Bot 😃\n
 Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see).
+
+${generateUserCounts(members)}
       
 I'll also let them know when Matrix users join or leave.\n
 For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat.`,
     });
   });
 
-  client.on("room.event",  await handleRoomEvent(client));
+  client.on("room.event", await handleRoomEvent(client));
 
   LogService.info("index", "Starting bot...");
   await client.start()

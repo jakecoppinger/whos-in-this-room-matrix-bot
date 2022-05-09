@@ -1,7 +1,7 @@
 import { MatrixClient } from "matrix-bot-sdk";
 import { matrixBotUsername } from "./config";
 import { MembershipType } from "./interfaces";
-import { createIntroductionString, getNumPeople, isASignalUser } from "./utils";
+import { generateOverview, getNumPeople, isASignalUser } from "./utils";
 
 export async function generateResponseForRoomEvent(event: any, allMembers: string[]): Promise<string | null> {
   if (event.sender === matrixBotUsername) {
@@ -31,7 +31,7 @@ export async function generateResponseForRoomEvent(event: any, allMembers: strin
 
   // Send welcome notices for Signal users joining 
   if (isASignalUser(matrixSender) && membershipEvent === 'join') {
-    return createIntroductionString(allMembers);
+    return generateOverview(allMembers);
   }
 
   if (membershipEvent === 'leave') {
