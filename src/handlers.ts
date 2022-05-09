@@ -4,11 +4,11 @@ import { MembershipType } from "./interfaces";
 import { createIntroductionString, getNumPeople, isASignalUser } from "./utils";
 
 export async function generateResponseForRoomEvent(event: any, allMembers: string[]): Promise<string | null> {
-  if(event.sender === matrixBotUsername) {
+  if (event.sender === matrixBotUsername) {
     // Don't send notifications for our bot joining!
     return null;
   }
-  if(Date.now() - event.origin_server_ts > 5000 ) {
+  if (Date.now() - event.origin_server_ts > 5000) {
     // Don't send notifications for events more than 4 seconds ago
     // Not great, but don't want to send for really old events.
     // We'd be better off ignoring events before our own join event but
@@ -34,14 +34,23 @@ export async function generateResponseForRoomEvent(event: any, allMembers: strin
     return createIntroductionString(allMembers);
   }
 
+  if (membershipEvent === 'leave') {
+    // The actual person leaving should be in the unsigned data
+    // The sender may be the host (if they're kicking them)
+    const personLeaving = event.unsigned?.prev_sender
+      ? event.unsigned.prev_sender
+      : event.sender;
+    if (!isASignalUser(personLeaving)) {
+      const people = await getNumPeople(allMembers);
+      return `${name} has left the chat (now ${people} people total)`;
+    }
+  }
+
   // Send notices for Matrix users joining or leaving
   if (!isASignalUser(matrixSender)) {
     if (membershipEvent === 'join') {
       const people = await getNumPeople(allMembers);
       return `${name} has joined the chat (now ${people} people total)`;
-    } else if (membershipEvent === 'leave') {
-      const people = await getNumPeople(allMembers);
-      return `${name} has left the chat (now ${people} people total)`;
     }
   }
   return null;

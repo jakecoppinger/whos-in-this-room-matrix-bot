@@ -114,5 +114,31 @@ To learn more see matrix.org/bridges/ or ask your host."
     expect(output).toMatchInlineSnapshot(`null`);
   });
 
+
+  test("when a Signal user is kicked the bot doesn't send a message", async () => {
+    const event: MatrixLeaveEvent = {
+      "type": "m.room.member",
+      "sender": "@host:matrix.org",
+      "content": {
+        "membership": "leave"
+      },
+      "state_key": "@signal_9b6:matrix.org",
+      "origin_server_ts": 99999999999999999999,
+      "unsigned": {
+        "replaces_state": "",
+        "prev_content": {
+          "membership": "join",
+          "displayname": "Displayname of 9b6 (Signal)"
+        },
+        "prev_sender": "@signal_9b6:matrix.org",
+        "age": 129
+      },
+      "event_id": ""
+    }
+    const output = await generateResponseForRoomEvent(event, ['@b:matrix.org', '@c:matrix.org']);
+    expect(output).toMatchInlineSnapshot(`null`);
+  });
+
+
 });
 
