@@ -1,0 +1,13 @@
+# Secrets!
+.env
+
+bot.json
+node_modules/
+*.swp
+dist/
+
+tsconfig.tsbuildinfo
+
+.DS_Store
+
+data/
