@@ -38,6 +38,17 @@ export function isABot(matrixUsername: string): boolean {
   return matrixUsername.includes('bot')
 }
 
+/**
+ * Format a username like `Person (@matrixname:matrix.org)` if they have a displayname,
+ * otherwise return the matrix username.
+ * @param m Room member object
+ * @returns Formatted string
+ */
+function prettyDisplayUsername(m: RoomMember): string {
+return m.displayname
+      ? `${m.displayname} (${m.matrixUsername})`
+      : m.matrixUsername;
+}
 
 /**
  * Returns string explaining who is in the chat.
@@ -55,10 +66,21 @@ export function generateUserCounts(members: RoomMember[], prefix: string = `Ther
   const numMatrixBots = bots.length;
   const numHumans = numMembers - numMatrixBots;
 
-  const justMatrixMembers: RoomMember[] = members.filter(member => !isABot(member.matrixUsername) && !isASignalUser(member.matrixUsername));
-  const matrixNames: string = justMatrixMembers.map(m => m.displayname ? `${m.displayname} (${m.matrixUsername})` : m.matrixUsername).join(', ');
+  /** Only *people* on Matrix, not bots or Signal user mocks. */
+  const justMatrixMembers: RoomMember[] = members
+    .filter(member => !isABot(member.matrixUsername) && !isASignalUser(member.matrixUsername));
 
-  return `${prefix} are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers} on Signal. The Matrix users are ${matrixNames}.\n`
+  const matrixNames: string = justMatrixMembers
+    .slice(0,-1)
+    .map(prettyDisplayUsername).join(', ');
+    
+  const theMatrixUsersText = justMatrixMembers.length === 1
+    ? `The Matrix user is ${prettyDisplayUsername(justMatrixMembers[0])}`
+    : `The Matrix users are ${matrixNames} and ${prettyDisplayUsername(justMatrixMembers[justMatrixMembers.length-1])}`
+
+  return `${prefix} are ${numHumans} people in this chat in total; ${
+    numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers
+    } on Signal. ${theMatrixUsersText}.\n`;
 }
 
 /**
