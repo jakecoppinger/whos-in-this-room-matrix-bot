@@ -3,6 +3,12 @@ import { matrixBotUsername } from "./config";
 import { AnyMatrixEvent, MembershipType, RoomMember } from "./interfaces";
 import { generateOverview, getInvitedAndJoinedMembers, getNumPeople, isASignalUser } from "./utils";
 
+/**
+ * Generate a response for the bot to send into the group, if any.
+ * @param event The Matrix event being processed
+ * @param allMembers A list of all members present in the room
+ * @returns String if it should say something, null otherwise
+ */
 export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMembers: RoomMember[]): Promise<string | null> {
   if (event.sender === matrixBotUsername) {
     // Don't send notifications for our bot joining!
@@ -15,16 +21,20 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
     // I'd prefer not to have state. 
     return null;
   }
+  /** The Matrix username of the person who sent the event */
   const matrixSender: string = event.sender;
 
   if (event.type !== 'm.room.member') {
+    // Don't say anything if the event has nothing to do with someone joining or leaving
     return null;
   }
   const membershipEvent: MembershipType | undefined = event.content?.membership;
 
   const senderDisplayname: string | undefined = event.content?.displayname;
+
   /** This displayname is only stored for leave events */
   const displaynameOnLeave: string | undefined = event.unsigned?.prev_content?.displayname;
+  
   /** Find any defined displayname if possible */
   const displayname: string | undefined = senderDisplayname ? senderDisplayname : displaynameOnLeave;
   const name = displayname ? `${displayname} (${matrixSender})` : matrixSender;
@@ -56,13 +66,15 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
   return null;
 }
 
-export async function handleRoomEvent(client: MatrixClient) {
+/**
+ * Run when *any* room event is received. The bot only sends a message if needed.
+ * @param client 
+ * @returns Room event handler, which itself returnings nothing
+ */
+export async function handleRoomEvent(client: MatrixClient): Promise<(roomId: string, event: any) => Promise<void>> {
   return async (roomId: string, event: any) => {
     const members = await getInvitedAndJoinedMembers(client, roomId);
-
     const message = await generateResponseForRoomEvent(event, members);
-    // console.log("room.event:");
-    // console.log(JSON.stringify(event, null, 2));
     if (message !== null) {
       client.sendMessage(roomId, {
         "msgtype": "m.notice",

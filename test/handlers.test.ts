@@ -17,7 +17,10 @@ describe("#generateResponseForRoomEvent()", () => {
       "event_id": ""
     };
 
-    const output = await generateResponseForRoomEvent(event, [{displayname: 'B', matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}, {matrixUsername: '@signal_315r13:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [
+      { displayname: 'B', matrixUsername: '@b:matrix.org' },
+      { matrixUsername: '@c:matrix.org' },
+      { matrixUsername: '@signal_315r13:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`
 "👋 Hello, I'm a bot 😃
 This chat is bridged between Signal & Matrix.
@@ -48,7 +51,8 @@ To learn more see matrix.org/bridges/ or ask your host."
       "event_id": ""
     }
 
-    const output = await generateResponseForRoomEvent(event, [{matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [
+      { matrixUsername: '@b:matrix.org' }, { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`"Displayname for A (@a:matrix.org) has left the chat (now 2 people total)"`);
   });
   test("when a Matrix user joins the bot sends a message", async () => {
@@ -65,7 +69,8 @@ To learn more see matrix.org/bridges/ or ask your host."
       "event_id": ""
     };
 
-    const output = await generateResponseForRoomEvent(event, [{matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
+    { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`"Displayname for A (@a:matrix.org) has joined the chat (now 3 people total)"`);
   });
 
@@ -91,7 +96,7 @@ To learn more see matrix.org/bridges/ or ask your host."
       },
     };
 
-    const output = await generateResponseForRoomEvent(event, [{matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' }, { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`null`);
   });
 
@@ -109,7 +114,8 @@ To learn more see matrix.org/bridges/ or ask your host."
       "event_id": ""
     };
 
-    const output = await generateResponseForRoomEvent(event, [{matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
+    { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`null`);
   });
 
@@ -134,7 +140,8 @@ To learn more see matrix.org/bridges/ or ask your host."
       },
       "event_id": ""
     }
-    const output = await generateResponseForRoomEvent(event, [{matrixUsername: '@b:matrix.org'}, {matrixUsername: '@c:matrix.org'}]);
+    const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
+    { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`null`);
   });
 
