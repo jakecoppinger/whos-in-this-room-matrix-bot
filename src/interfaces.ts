@@ -1,4 +1,20 @@
-
+// TODO: This needs refactoring, but it's better than any :D
+export type AnyMatrixEvent = {
+  origin_server_ts: number,
+  sender: string,
+  event_id: string
+  type?: string;
+  content: {
+    membership?: MembershipType;
+    displayname?: string;
+  };
+  unsigned?: {
+    prev_content?: {
+      displayname?: string;
+    }
+    prev_sender?: string
+  }
+}
 type CommonMatrixEventFields = {
   origin_server_ts: number,
   sender: string,
@@ -83,4 +99,9 @@ export type MatrixLeaveEvent = CommonMatrixEventFields & {
     age?: number
   },
   event_id?: string
+}
+export type RoomMember = {
+  matrixUsername: string;
+  displayname?: string;
+  memberStatus?: 'join' | 'invite' | null
 }

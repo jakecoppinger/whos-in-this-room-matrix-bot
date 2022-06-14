@@ -4,15 +4,15 @@ import {
   RichConsoleLogger,
 } from "matrix-bot-sdk";
 import { homeserverUrl, matrixBotPassword, matrixBotUsername } from './config'
-import { generateUserCounts, parseMatrixUsernamePretty } from './utils';
+import { generateUserCounts, getInvitedAndJoinedMembers, parseMatrixUsernamePretty } from './utils';
 import { handleRoomEvent } from './handlers';
 
 LogService.setLogger(new RichConsoleLogger());
 
-LogService.setLevel(LogLevel.DEBUG);
-
 // Shows the Matrix sync loop details - not needed most of the time
-// LogService.setLevel(LogLevel.TRACE);
+// LogService.setLevel(LogLevel.DEBUG);
+
+LogService.setLevel(LogLevel.INFO);
 
 // LogService.muteModule("Metrics");
 LogService.trace = LogService.debug;
@@ -34,17 +34,16 @@ async function main() {
     LogService.error("index", `Failed decryption event!\n${{ roomId, event, error }}`);
   });
 
-  client.on("room.join", async (roomId: string, event: any) => {
-    console.log({ event });
+  client.on("room.join", async (roomId: string, _event: any) => {
     LogService.info("index", `Bot joined room ${roomId}`);
 
-    const members = await client.getJoinedRoomMembers(roomId);
+    const members = await getInvitedAndJoinedMembers(client, roomId);
     client.sendMessage(roomId, {
       "msgtype": "m.notice",
       "body": `👋 Hello, I'm the Who's In This Room Bot 😃\n
 Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see). I'll also let them know when Matrix users join or leave.\n
 Currently, ${generateUserCounts(members, 'there')}
-For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat.`,
+For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat or see github.com/jakecoppinger/whos-in-this-room-matrix-bot.`,
     });
   });
 
