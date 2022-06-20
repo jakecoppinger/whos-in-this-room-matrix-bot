@@ -9,7 +9,7 @@ function membershipEventToRoomMember(m: MembershipEvent): RoomMember {
   const memberStatus = m.content.membership === 'invite' || m.content.membership === 'join' ? m.content.membership : null;
   return {
     matrixUsername:
-    m.sender, displayname: m.content.displayname, memberStatus
+      m.sender, displayname: m.content.displayname, memberStatus
   }
 }
 
@@ -45,9 +45,16 @@ export function isABot(matrixUsername: string): boolean {
  * @returns Formatted string
  */
 function prettyDisplayUsername(m: RoomMember): string {
-return m.displayname
-      ? `${m.displayname} (${m.matrixUsername})`
-      : m.matrixUsername;
+  return m.displayname
+    ? `${m.displayname} (${m.matrixUsername})`
+    : m.matrixUsername;
+}
+
+export function joinWithCommandAndAnd<T>(input: T[]): string {
+  // const input = ['one', 'two', 'three', 'four'];
+  const last = input.pop();
+  const result = input.join(', ') + ' and ' + last;
+  return result;
 }
 
 /**
@@ -70,16 +77,14 @@ export function generateUserCounts(members: RoomMember[], prefix: string = `Ther
   const justMatrixMembers: RoomMember[] = members
     .filter(member => !isABot(member.matrixUsername) && !isASignalUser(member.matrixUsername));
 
-  const matrixNames: string = justMatrixMembers
-    .slice(0,-1)
-    .map(prettyDisplayUsername).join(', ');
-    
+  const matrixNames = justMatrixMembers
+    .map(prettyDisplayUsername)
+
   const theMatrixUsersText = justMatrixMembers.length === 1
     ? `The Matrix user is ${prettyDisplayUsername(justMatrixMembers[0])}`
-    : `The Matrix users are ${matrixNames} and ${prettyDisplayUsername(justMatrixMembers[justMatrixMembers.length-1])}`
+    : `The Matrix users are ${joinWithCommandAndAnd(matrixNames)}`
 
-  return `${prefix} are ${numHumans} people in this chat in total; ${
-    numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers
+  return `${prefix} are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers
     } on Signal. ${theMatrixUsersText}.\n`;
 }
 

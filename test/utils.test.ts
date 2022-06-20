@@ -1,6 +1,4 @@
 
-import { MatrixJoinEvent, MatrixLeaveEvent } from '../src/interfaces';
-import { generateResponseForRoomEvent } from '../src/handlers';
 import { generateUserCounts } from '../src/utils';
 
 describe("#generateUserCounts()", () => {
