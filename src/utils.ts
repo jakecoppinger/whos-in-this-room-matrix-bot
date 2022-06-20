@@ -5,7 +5,7 @@ function getDisplayname(event: MembershipEvent): string | undefined {
   return event.content.displayname;
 }
 
-function membershipEventToRoomMember(m: MembershipEvent): RoomMember {
+export function membershipEventToRoomMember(m: MembershipEvent): RoomMember {
   const memberStatus = m.content.membership === 'invite' || m.content.membership === 'join' ? m.content.membership : null;
   return {
     matrixUsername:
@@ -50,7 +50,7 @@ export function isABot(matrixUsername: string): boolean {
  * @param m Room member object
  * @returns Formatted string
  */
-function usernameOrMatrixName(m: RoomMember): string {
+export function usernameOrMatrixName(m: RoomMember): string {
   return m.displayname !== undefined && m.displayname !== ''
     ? m.displayname
     : m.matrixUsername.split(':')[0].replace('@','')
