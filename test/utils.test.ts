@@ -30,7 +30,7 @@ describe("#generateUserCounts()", () => {
     { matrixUsername: '@signal_315r13:matrix.org' }])
 
     expect(output).toMatchInlineSnapshot(`
-"There are 2 people in this chat in total; 1 on Matrix and 1 on Signal. The Matrix user is B (@b:matrix.org).
+"There are 2 people in this chat in total; 1 on Matrix and 1 on Signal. The Matrix user is B.
 "
 `);
   });
@@ -41,7 +41,7 @@ describe("#generateUserCounts()", () => {
     ])
 
     expect(output).toMatchInlineSnapshot(`
-"There are 2 people in this chat in total; 2 on Matrix and 0 on Signal. The Matrix users are B (@b:matrix.org) and @c:matrix.org.
+"There are 2 people in this chat in total; 2 on Matrix and 0 on Signal. The Matrix users are B and c.
 "
 `);
   });
@@ -55,7 +55,7 @@ describe("#generateUserCounts()", () => {
     ])
 
     expect(output).toMatchInlineSnapshot(`
-"There are 3 people in this chat in total; 3 on Matrix and 0 on Signal. The Matrix users are @a:matrix.org, B (@b:matrix.org) and @c:matrix.org.
+"There are 3 people in this chat in total; 3 on Matrix and 0 on Signal. The Matrix users are a, B and c.
 "
 `);
   });
@@ -66,7 +66,7 @@ describe("#generateUserCounts()", () => {
       { matrixUsername: '@signal_315r13:matrix.org' }])
 
     expect(output).toMatchInlineSnapshot(`
-"There are 3 people in this chat in total; 2 on Matrix and 1 on Signal. The Matrix users are B (@b:matrix.org) and @c:matrix.org.
+"There are 3 people in this chat in total; 2 on Matrix and 1 on Signal. The Matrix users are B and c.
 "
 `);
   });

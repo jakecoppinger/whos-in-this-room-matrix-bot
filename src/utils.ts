@@ -45,15 +45,15 @@ export function isABot(matrixUsername: string): boolean {
 }
 
 /**
- * Format a username like `Person (@matrixname:matrix.org)` if they have a displayname,
- * otherwise return the matrix username.
+ * Returns the displayname if it exists (which it should). Otherwise returns the matrix username,
+ * with the domain stripped and @ symbol removed.
  * @param m Room member object
  * @returns Formatted string
  */
-function prettyDisplayUsername(m: RoomMember): string {
+function usernameOrMatrixName(m: RoomMember): string {
   return m.displayname !== undefined && m.displayname !== ''
-    ? `${m.displayname} (${m.matrixUsername})`
-    : m.matrixUsername;
+    ? m.displayname
+    : m.matrixUsername.split(':')[0].replace('@','')
 }
 
 /**
@@ -91,7 +91,7 @@ export function generateUserCounts(members: RoomMember[], prefix: string = `Ther
     .filter(member => !isABot(member.matrixUsername) && !isASignalUser(member.matrixUsername));
 
   const matrixNames = justMatrixMembers
-    .map(prettyDisplayUsername)
+    .map(usernameOrMatrixName)
 
   const theMatrixUsersText =
     `The Matrix ${ justMatrixMembers.length === 1 ? `user is` : `users are`} ${joinWithCommandAndAnd(matrixNames)}`
