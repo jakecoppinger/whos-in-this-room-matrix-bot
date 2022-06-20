@@ -13,6 +13,12 @@ function membershipEventToRoomMember(m: MembershipEvent): RoomMember {
   }
 }
 
+/**
+ * Get list of invited and joined room members
+ * @param client 
+ * @param roomId 
+ * @returns 
+ */
 export async function getInvitedAndJoinedMembers(client: MatrixClient, roomId: string): Promise<RoomMember[]> {
   const membershipEvents: MembershipEvent[] = await client.getRoomMembers(roomId);
   const onlyInvitedJoined = membershipEvents.filter(e => e.content.membership === 'join' || e.content.membership === 'invite');
@@ -45,13 +51,20 @@ export function isABot(matrixUsername: string): boolean {
  * @returns Formatted string
  */
 function prettyDisplayUsername(m: RoomMember): string {
-  return m.displayname
+  return m.displayname !== undefined && m.displayname !== ''
     ? `${m.displayname} (${m.matrixUsername})`
     : m.matrixUsername;
 }
 
-export function joinWithCommandAndAnd<T>(input: T[]): string {
-  // const input = ['one', 'two', 'three', 'four'];
+/**
+ * Join strings by commads, but put an `and` before the last item. If only one item just returns that.
+ * @param input 
+ * @returns 
+ */
+export function joinWithCommandAndAnd(input: string[]): string {
+  if(input.length == 1) {
+    return input[0]
+  }
   const last = input.pop();
   const result = input.join(', ') + ' and ' + last;
   return result;
@@ -80,9 +93,8 @@ export function generateUserCounts(members: RoomMember[], prefix: string = `Ther
   const matrixNames = justMatrixMembers
     .map(prettyDisplayUsername)
 
-  const theMatrixUsersText = justMatrixMembers.length === 1
-    ? `The Matrix user is ${prettyDisplayUsername(justMatrixMembers[0])}`
-    : `The Matrix users are ${joinWithCommandAndAnd(matrixNames)}`
+  const theMatrixUsersText =
+    `The Matrix ${ justMatrixMembers.length === 1 ? `user is` : `users are`} ${joinWithCommandAndAnd(matrixNames)}`
 
   return `${prefix} are ${numHumans} people in this chat in total; ${numMatrixmembers - numMatrixBots} on Matrix and ${numSignalMembers
     } on Signal. ${theMatrixUsersText}.\n`;

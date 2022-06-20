@@ -1,5 +1,27 @@
 
-import { generateUserCounts } from '../src/utils';
+import { generateUserCounts, joinWithCommandAndAnd } from '../src/utils';
+describe("#joinWithCommandAndAnd()", () => {
+
+  test("One item", async () => {
+
+    const output = joinWithCommandAndAnd(['a']);
+
+    expect(output).toMatchInlineSnapshot(`"a"`);
+  });
+  test("Two items", async () => {
+
+    const output = joinWithCommandAndAnd(['a','b']);
+
+    expect(output).toMatchInlineSnapshot(`"a and b"`);
+  });
+  test("Three items", async () => {
+
+    const output = joinWithCommandAndAnd(['a','b', 'c']);
+
+    expect(output).toMatchInlineSnapshot(`"a, b and c"`);
+  });
+
+});
 
 describe("#generateUserCounts()", () => {
   test("Two members, one Matrix one Signal", async () => {
