@@ -37,7 +37,7 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
   
   /** Find any defined displayname if possible */
   const displayname: string | undefined = senderDisplayname ? senderDisplayname : displaynameOnLeave;
-  const name = displayname ? `${displayname} (${matrixSender})` : matrixSender;
+  const name = displayname ? displayname : matrixSender;
 
   // Send welcome notices for Signal users joining 
   if (isASignalUser(matrixSender) && membershipEvent === 'join') {
