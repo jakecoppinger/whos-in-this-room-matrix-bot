@@ -10,13 +10,13 @@ describe("#joinWithCommandAndAnd()", () => {
   });
   test("Two items", async () => {
 
-    const output = joinWithCommandAndAnd(['a','b']);
+    const output = joinWithCommandAndAnd(['a', 'b']);
 
     expect(output).toMatchInlineSnapshot(`"a and b"`);
   });
   test("Three items", async () => {
 
-    const output = joinWithCommandAndAnd(['a','b', 'c']);
+    const output = joinWithCommandAndAnd(['a', 'b', 'c']);
 
     expect(output).toMatchInlineSnapshot(`"a, b and c"`);
   });
@@ -63,11 +63,25 @@ describe("#generateUserCounts()", () => {
     const output = generateUserCounts([
       { displayname: 'B', matrixUsername: '@b:matrix.org' },
       { matrixUsername: '@c:matrix.org' },
-      { matrixUsername: '@signal_315r13:matrix.org' }])
+      { matrixUsername: '@signal_315r13:matrix.org' },
+      {
+        displayname: "Who's In This Room Bot",
+        matrixUsername: '@whos-in-this-room-bot:jakecopp.chat'
+      },
+      {
+        displayname: "Signal bridge bot",
+        matrixUsername: '@signalbot:jakecopp.chat'
+      }
+    ])
 
     expect(output).toMatchInlineSnapshot(`
 "There are 3 people in this chat in total; 2 on Matrix and 1 on Signal. The Matrix users are B and c.
 "
 `);
   });
+
+
+
+
+
 });
