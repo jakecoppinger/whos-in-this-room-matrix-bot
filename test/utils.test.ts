@@ -66,11 +66,11 @@ describe("#generateUserCounts()", () => {
       { matrixUsername: '@signal_315r13:matrix.org' },
       {
         displayname: "Who's In This Room Bot",
-        matrixUsername: '@whos-in-this-room-bot:jakecopp.chat'
+        matrixUsername: '@whos-in-this-room-bot:somewhere.com'
       },
       {
         displayname: "Signal bridge bot",
-        matrixUsername: '@signalbot:jakecopp.chat'
+        matrixUsername: '@signalbot:somewhere.com'
       }
     ])
 
