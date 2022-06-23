@@ -81,5 +81,6 @@ export async function handleRoomEvent(client: MatrixClient): Promise<(roomId: st
         "body": message
       });
     }
+    await client.sendReadReceipt(roomId, event.event_id);
   }
 }
