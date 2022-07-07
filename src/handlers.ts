@@ -56,11 +56,12 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
     }
   }
 
-  // Send notices for Matrix users joining or leaving
+  // Send notices for Matrix users joining
   if (!isASignalUser(matrixSender)) {
-    if (membershipEvent === 'join') {
-      const people = await getNumPeople(allMembers) + 1; // The new person isn't in the current list!
-      return `${name} has joined the chat (now ${people} people total)`;
+    // Doesn't handle users who aren't invited but join the room via a link.
+    if (membershipEvent === 'invite') {
+      const people = await getNumPeople(allMembers);
+      return `${name} invited to the chat (now ${people} people total)`;
     }
   }
   return null;

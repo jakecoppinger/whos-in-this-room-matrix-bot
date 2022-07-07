@@ -73,8 +73,6 @@ export type MatrixInviteEvent = CommonMatrixEventFields & {
   sender: MatrixUsername,
   state_key: MatrixUsername,
   type: "m.room.member",
-  unsigned: {
-  },
   event_id: string
 }
 export type MembershipType = 'leave' | 'invite' | 'join'
