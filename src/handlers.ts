@@ -1,4 +1,4 @@
-import { MatrixClient} from "matrix-bot-sdk";
+import { MatrixClient, LogService } from "matrix-bot-sdk";
 import { matrixBotUsername } from "./config";
 import { AnyMatrixEvent, MembershipType, RoomMember } from "./interfaces";
 import { generateOverview, getInvitedAndJoinedMembers, getNumPeople, isASignalUser } from "./utils";
@@ -10,10 +10,6 @@ import { generateOverview, getInvitedAndJoinedMembers, getNumPeople, isASignalUs
  * @returns String if it should say something, null otherwise
  */
 export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMembers: RoomMember[]): Promise<string | null> {
-  if (event.sender === matrixBotUsername) {
-    // Don't send notifications for our bot joining!
-    return null;
-  }
   if (Date.now() - event.origin_server_ts > 5000) {
     // Don't send notifications for events more than 4 seconds ago
     // Not great, but don't want to send for really old events.
@@ -21,13 +17,24 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
     // I'd prefer not to have state. 
     return null;
   }
-  /** The Matrix username of the person who sent the event */
-  const matrixSender: string = event.sender;
 
   if (event.type !== 'm.room.member') {
     // Don't say anything if the event has nothing to do with someone joining or leaving
     return null;
   }
+
+  /** The Matrix username of the person who got invited */
+  const invitedMatrixUser: string | undefined = event.state_key;
+  if(invitedMatrixUser === undefined) {
+    LogService.error("handlers", `No state key existed in invite event, not sending anything`);
+    return null;
+  }
+
+  if (invitedMatrixUser === matrixBotUsername) {
+    // Don't send notifications for our bot joining!
+    return null;
+  }
+  
   const membershipEvent: MembershipType | undefined = event.content?.membership;
 
   const senderDisplayname: string | undefined = event.content?.displayname;
@@ -37,10 +44,10 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
   
   /** Find any defined displayname if possible */
   const displayname: string | undefined = senderDisplayname ? senderDisplayname : displaynameOnLeave;
-  const name = displayname ? displayname : matrixSender;
+  const name = displayname ? displayname : invitedMatrixUser;
 
   // Send welcome notices for Signal users joining 
-  if (isASignalUser(matrixSender) && membershipEvent === 'join') {
+  if (isASignalUser(invitedMatrixUser) && membershipEvent === 'invite') {
     return generateOverview(allMembers);
   }
 
@@ -57,7 +64,7 @@ export async function generateResponseForRoomEvent(event: AnyMatrixEvent, allMem
   }
 
   // Send notices for Matrix users joining
-  if (!isASignalUser(matrixSender)) {
+  if (!isASignalUser(invitedMatrixUser)) {
     // Doesn't handle users who aren't invited but join the room via a link.
     if (membershipEvent === 'invite') {
       const people = await getNumPeople(allMembers);

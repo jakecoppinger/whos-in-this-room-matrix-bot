@@ -14,6 +14,7 @@ export type AnyMatrixEvent = {
     }
     prev_sender?: string
   }
+  state_key?: string;
 }
 type CommonMatrixEventFields = {
   origin_server_ts: number,

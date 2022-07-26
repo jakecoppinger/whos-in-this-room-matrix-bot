@@ -1,14 +1,15 @@
 
 import { MatrixInviteEvent, MatrixJoinEvent, MatrixLeaveEvent } from '../src/interfaces';
 import { generateResponseForRoomEvent } from '../src/handlers';
+import { matrixBotUsername } from "../src/config";
 
 describe("#generateResponseForRoomEvent()", () => {
   test("when a Signal user joins the bot summarises the room", async () => {
-    const event: MatrixJoinEvent = {
+    const event: MatrixInviteEvent = {
       "content": {
         avatar_url: '',
         displayname: "Displayname for A",
-        "membership": "join"
+        "membership": "invite"
       },
       "origin_server_ts": 99999999999999999,
       "sender": "@signal_15135135:matrix.org",
@@ -44,7 +45,7 @@ To learn more see matrix.org/bridges/ or ask your host."
         "prev_content": {
           "avatar_url": "",
           "displayname": "Displayname for A",
-          "membership": "join"
+          "membership": "invite"
         },
         "prev_sender": "@a:matrix.org"
       },
@@ -73,6 +74,25 @@ To learn more see matrix.org/bridges/ or ask your host."
     const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
     { matrixUsername: '@c:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`"Displayname for A invited to the chat (now 2 people total)"`);
+  });
+
+  test("when the bot is invited it doesn't announce it's own invite", async () => {
+    const event: MatrixInviteEvent = {
+      "content": {
+        avatar_url: '',
+        displayname: "Who's in this room bot",
+        "membership": "invite"
+      },
+      "origin_server_ts": 99999999999999999,
+      "sender": matrixBotUsername,
+      "state_key": matrixBotUsername,
+      "type": "m.room.member",
+      "event_id": ""
+    };
+
+    const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
+    { matrixUsername: '@c:matrix.org' }, {matrixUsername: matrixBotUsername}]);
+    expect(output).toMatchInlineSnapshot(`null`);
   });
 
   test("when a Matrix user joins the bot doesn't send a message", async () => {
@@ -108,7 +128,7 @@ To learn more see matrix.org/bridges/ or ask your host."
       "unsigned": {
         "replaces_state": "$PNxvcGtohwVH34wCYTPQJi7m0hA1ERS8iDjJlcfGNG0",
         "prev_content": {
-          "membership": "join",
+          "membership": "invite",
           "displayname": "Displayname of A (Signal)",
           "avatar_url": ""
         },
@@ -122,11 +142,11 @@ To learn more see matrix.org/bridges/ or ask your host."
   });
 
   test("no message is sent when an event is in the past", async () => {
-    const event: MatrixJoinEvent = {
+    const event: MatrixInviteEvent = {
       "content": {
         avatar_url: '',
         displayname: "Displayname for A",
-        "membership": "join"
+        "membership": "invite"
       },
       "origin_server_ts": 0,
       "sender": "@a:matrix.org",
@@ -153,7 +173,7 @@ To learn more see matrix.org/bridges/ or ask your host."
       "unsigned": {
         "replaces_state": "",
         "prev_content": {
-          "membership": "join",
+          "membership": "invite",
           "displayname": "Displayname of 9b6 (Signal)"
         },
         "prev_sender": "@signal_9b6:matrix.org",
