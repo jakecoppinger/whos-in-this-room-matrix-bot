@@ -43,7 +43,7 @@ async function main() {
       "body": `👋 Hello, I'm the Who's In This Room Bot 😃\n
 Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see). I'll also let them know when Matrix users join or leave.\n
 Currently, ${generateUserCounts(members, 'there')}
-For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat or see github.com/jakecoppinger/whos-in-this-room-matrix-bot.`,
+For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat or see github.com/jakecoppinger/whos-in-this-room-matrix-bot`,
     });
   });
 
