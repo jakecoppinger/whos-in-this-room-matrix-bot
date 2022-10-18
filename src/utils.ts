@@ -106,10 +106,11 @@ export function generateUserCounts(members: RoomMember[], prefix: string = `Ther
  * @param members 
  * @returns Announcement string
  */
-export function generateOverview(members: RoomMember[]): string {
-  return `👋 Hello, I'm a bot 😃\nThis chat is bridged between Signal & Matrix.\n
-${generateUserCounts(members)}
+export function generateOverview(members: RoomMember[]): string[] {
+  const firstString = `This chat is bridged between Signal & Matrix, details below.`;
+  const secondString = `${generateUserCounts(members)}
 To learn more see matrix.org/bridges/ or ask your host.`;
+  return [firstString, secondString];
 }
 
 /** How many real people in the room? */
