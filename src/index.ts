@@ -6,6 +6,7 @@ import {
 import { homeserverUrl, matrixBotPassword, matrixBotUsername } from './config'
 import { generateUserCounts, getInvitedAndJoinedMembers, parseMatrixUsernamePretty } from './utils';
 import { handleRoomEvent } from './handlers';
+import { sendThreadReply } from './matrix-api'
 
 LogService.setLogger(new RichConsoleLogger());
 
@@ -38,13 +39,17 @@ async function main() {
     LogService.info("index", `Bot joined room ${roomId}`);
 
     const members = await getInvitedAndJoinedMembers(client, roomId);
-    client.sendMessage(roomId, {
+    const rootMessageId: string = await client.sendMessage(roomId, {
       "msgtype": "m.notice",
-      "body": `👋 Hello, I'm the Who's In This Room Bot 😃\n
-Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see). I'll also let them know when Matrix users join or leave.\n
-Currently, ${generateUserCounts(members, 'there')}
-For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat or see github.com/jakecoppinger/whos-in-this-room-matrix-bot`,
+      "body": `👋 Hello, I'm the Who's In This Room Bot.`,
     });
+    await sendThreadReply(client, {
+      roomId, root_event_id: rootMessageId,
+      text:
+`Each time a Signal user joins the chat I'll send a message saying how many people are in the chat on the Matrix side (as they can't see). I'll also let them know when Matrix users join or leave.\n
+Currently, ${generateUserCounts(members, 'there')}
+For questions or feedback jump into #whos-in-this-room-bot-discussion:jakecopp.chat or see github.com/jakecoppinger/whos-in-this-room-matrix-bot
+`});
   });
 
   client.on("room.event", await handleRoomEvent(client));

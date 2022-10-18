@@ -23,12 +23,12 @@ describe("#generateResponseForRoomEvent()", () => {
       { matrixUsername: '@c:matrix.org' },
       { matrixUsername: '@signal_315r13:matrix.org' }]);
     expect(output).toMatchInlineSnapshot(`
-"👋 Hello, I'm a bot 😃
-This chat is bridged between Signal & Matrix.
+Array [
+  "This chat is bridged between Signal & Matrix, details below.",
+  "There are 3 people in this chat in total; 2 on Matrix and 1 on Signal. The Matrix users are B and c.
 
-There are 3 people in this chat in total; 2 on Matrix and 1 on Signal. The Matrix users are B and c.
-
-To learn more see matrix.org/bridges/ or ask your host."
+To learn more see matrix.org/bridges/ or ask your host.",
+]
 `);
   });
   test("when a Matrix user leave the bot sends a message", async () => {
@@ -54,7 +54,11 @@ To learn more see matrix.org/bridges/ or ask your host."
 
     const output = await generateResponseForRoomEvent(event, [
       { matrixUsername: '@b:matrix.org' }, { matrixUsername: '@c:matrix.org' }]);
-    expect(output).toMatchInlineSnapshot(`"Displayname for A has left the chat (now 2 people total)"`);
+    expect(output).toMatchInlineSnapshot(`
+Array [
+  "Displayname for A has left the chat (now 2 people total)",
+]
+`);
   });
 
   test("when a Matrix user is invited the bot sends a message", async () => {
@@ -73,7 +77,11 @@ To learn more see matrix.org/bridges/ or ask your host."
 
     const output = await generateResponseForRoomEvent(event, [{ matrixUsername: '@b:matrix.org' },
     { matrixUsername: '@c:matrix.org' }]);
-    expect(output).toMatchInlineSnapshot(`"Displayname for A invited to the chat (now 2 people total)"`);
+    expect(output).toMatchInlineSnapshot(`
+Array [
+  "Displayname for A invited to the chat (now 2 people total)",
+]
+`);
   });
 
   test("when the bot is invited it doesn't announce it's own invite", async () => {
